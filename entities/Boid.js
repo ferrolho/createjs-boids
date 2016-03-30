@@ -1,6 +1,6 @@
 var BOID_SIZE = 6;
 var BOID_SPEED = 2;
-var BOID_MAX_ROT = 2;
+var BOID_MAX_ROT = 5;
 var BOID_RADIUS = 100;
 
 function Boid(x, y) {
@@ -38,6 +38,7 @@ Boid.prototype.update = function() {
 	}
 
 	if (this.friends.length > 0) {
+		// Alignment behavior
 		var rotationsMean = 0;
 
 		for (let friend of this.friends)
@@ -45,7 +46,16 @@ Boid.prototype.update = function() {
 
 		rotationsMean /= this.friends.length;
 
-		this.shape.rotation += rotationsMean > 0 ? Math.min(rotationsMean, BOID_MAX_ROT) : Math.max(rotationsMean, -BOID_MAX_ROT);
+		var rotDiff = rotationsMean - this.shape.rotation;
+		this.shape.rotation += rotDiff > 0 ? Math.min(rotDiff, BOID_MAX_ROT) : Math.max(rotDiff, -BOID_MAX_ROT);
+
+		// Cohesion behavior
+		var xMean = 0, yMean = 0;
+
+		for (let friend of this.friends) {
+			xMean += friend.shape.x;
+			yMean += friend.shape.y;
+		}
 	} else {
 		this.shape.rotation += randomBetween(-BOID_MAX_ROT, BOID_MAX_ROT);
 	}
