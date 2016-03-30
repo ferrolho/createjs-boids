@@ -1,10 +1,10 @@
 {
-	var fpsLabel;
-
 	var boids = [];
 
 	function Scene() {
-		createFPS();
+		loadSound();
+
+		createStats();
 
 		spawnBoid(canvas.width / 2, canvas.height / 2);
 
@@ -14,36 +14,69 @@
 	}
 
 	Scene.prototype.update = function() {
-		updateFPS();
+		updateStats();
 
 		for (let boid of boids)
 			boid.update();
 	}
 
 
+	/*
+	* Sound
+	*/
+
+	function loadSound() {
+		if (!createjs.Sound.initializeDefaultPlugins()) {
+			console.log('No sound!');
+			return;
+		}
+
+		var audioPath = 'assets/';
+		var sounds = [{ id: 'music', src: 'dust-it-off.mp3' }];
+
+		createjs.Sound.addEventListener('fileload', handleLoad);
+		createjs.Sound.registerSounds(sounds, audioPath);
+	}
+
+	function handleLoad(event) {
+		if (event.id === 'music')
+			createjs.Sound.play(event.id);
+	}
+
+
+	/*
+	* Spawner
+	*/
+
 	function spawnBoid(x, y) {
 		boids.push(new Boid(x, y));
-
-		console.log('Boids in scene: ' + boids.length);
 	}
 
-	function createFPS() {
-		var text = 'FPS:\n';
 
-		fpsLabel = new createjs.Text(text, '18px Playfair Display', '#000');
+	/*
+	* Stats
+	*/
 
-		fpsLabel.x = 10;
-		fpsLabel.y = 10;
+	var statsText;
 
-		stage.addChild(fpsLabel);
+	function createStats() {
+		statsText = new createjs.Text("Loading...", '18px Montserrat', '#000');
+
+		statsText.x = 10;
+		statsText.y = 10;
+
+		stage.addChild(statsText);
 	}
 
-	function updateFPS() {
-		var text = 'FPS: ' + Math.round(createjs.Ticker.getMeasuredFPS()) + '\n';
+	function updateStats() {
+		var text = "";
+		text += 'Click anywhere to spawn a Boid.\n\n';
+		text += 'Boids in scene: ' + boids.length + '\n';
+		text += 'FPS: ' + Math.round(createjs.Ticker.getMeasuredFPS()) + '\n';
 
-		fpsLabel.text = text;
+		statsText.text = text;
 
-		stage.setChildIndex(fpsLabel, stage.numChildren - 1);
+		stage.setChildIndex(statsText, stage.numChildren - 1);
 	}
 
 }
