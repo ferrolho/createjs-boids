@@ -41,14 +41,12 @@ Boid.prototype.initShape = function(x, y, rotation) {
 Boid.prototype.update = function() {
 	this.updateFriends();
 
-	if (this.friends.length > 0) {
+	if (this.friends.length <= 0)
+		this.heading.rotateDeg(randomBetween(-BOID_MAX_ROT, BOID_MAX_ROT));
+	else {
 		var alignment = this.calcAlignment();
 		var cohesion = this.calcCohesion();
 		var separation = this.calcSeparation();
-
-		//this.heading = alignment;
-		//this.heading = cohesion;
-		//this.heading = separation;
 
 		alignment.multiply(true ? new Victor(1, 1) : new Victor(0, 0));
 		cohesion.multiply(true ? new Victor(1, 1) : new Victor(0, 0));
@@ -60,11 +58,8 @@ Boid.prototype.update = function() {
 
 		if (Math.abs(headingsDiff) > BOID_MAX_ROT)
 			this.heading.rotateDeg(headingsDiff > 0 ? BOID_MAX_ROT : -BOID_MAX_ROT);
-		else {
+		else
 			this.heading = desiredHeading;
-		}
-	} else {
-		this.heading.rotateDeg(randomBetween(-BOID_MAX_ROT, BOID_MAX_ROT));
 	}
 
 	this.shape.x = (this.shape.x + this.heading.x * BOID_SPEED).mod(canvas.width);

@@ -1,5 +1,5 @@
 /**
-* Returns a random number between `min` and `max`.
+* Returns a random integer number between `min` and `max`.
 */
 function randomBetween(min, max) {
 	return Math.floor(min + Math.random() * (max - min));
