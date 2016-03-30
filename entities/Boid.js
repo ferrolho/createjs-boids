@@ -11,6 +11,11 @@ function Boid(x, y) {
 	.lineTo(0, 1 * BOID_SIZE)
 	.lineTo(0, -1 * BOID_SIZE);
 
+	this.shape.cache(0, -1 * BOID_SIZE, 3 * BOID_SIZE, 2 * BOID_SIZE);
+	this.shape.snapToPixel = true;
+
+	this.shape.rotation = randomBetween(0, 360);
+
 	this.shape.x = x;
 	this.shape.y = y;
 
@@ -18,7 +23,7 @@ function Boid(x, y) {
 }
 
 Boid.prototype.update = function() {
-	this.shape.rotation += randomBetween(-2, 2);
+	this.shape.rotation = (this.shape.rotation + randomBetween(-2, 2)).mod(360);
 
 	this.shape.x += Math.cos(deg2rad(this.shape.rotation)) * BOID_SPEED;
 	this.shape.y += Math.sin(deg2rad(this.shape.rotation)) * BOID_SPEED;
