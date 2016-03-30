@@ -20,9 +20,6 @@
 			boid.update();
 	}
 
-	Scene.prototype.draw = function() {
-		//boid.draw();
-	}
 
 	function spawnBoid(x, y) {
 		boids.push(new Boid(x, y));

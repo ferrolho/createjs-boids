@@ -33,9 +33,7 @@ function main() {
 	createjs.Ticker.addEventListener('tick', tick);
 
 	function tick(event) {
-		//console.log('total time: ' + createjs.Ticker.getTime());
 		scene.update();
-		scene.draw();
 
 		// draw the updates to stage:
 		stage.update(event);
