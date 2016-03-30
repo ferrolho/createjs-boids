@@ -6,7 +6,7 @@
 	function Scene() {
 		createFPS();
 
-		spawnBoid(100, 100);
+		spawnBoid(canvas.width / 2, canvas.height / 2);
 
 		addEventListener("click", function(event) {
 			spawnBoid(event.x, event.y);
