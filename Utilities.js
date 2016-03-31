@@ -28,6 +28,13 @@ function angleBetweenVectors(vec1, vec2) {
 	return rad2deg(Math.acos(vec1.dot(vec2).clamp(-1, 1)));
 }
 
+function crossProduct(vec1, vec2) {
+	vec1 = vec1.clone().normalize();
+	vec2 = vec2.clone().normalize();
+
+	return vec1.cross(vec2);
+}
+
 /**
 * The JavaScript Modulo Bug
 * http://javascript.about.com/od/problemsolving/a/modulobug.htm

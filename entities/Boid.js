@@ -1,6 +1,5 @@
 var BOID_SIZE = 6;
-var BOID_SPEED = 2;
-var BOID_MAX_ROT = 2;
+var BOID_MAX_ROT = 10;
 
 var VIEW_RADIUS = 20 * BOID_SIZE;
 var CROWD_RADIUS = 6 * BOID_SIZE;
@@ -9,6 +8,8 @@ function Boid(x, y) {
 	var rotation = randomBetween(0, 360);
 
 	this.heading = new Victor(Math.cos(deg2rad(rotation)), Math.sin(deg2rad(rotation)));
+
+	this.updateSpeed();
 
 	this.friends = [];
 	this.closeFriends = [];
@@ -52,18 +53,27 @@ Boid.prototype.update = function() {
 		cohesion.multiply(true ? new Victor(1, 1) : new Victor(0, 0));
 		separation.multiply(true ? new Victor(1.5, 1.5) : new Victor(0, 0));
 
-		var desiredHeading = alignment.add(cohesion).add(separation).normalize();
+		var desiredHeading = new Victor(0, 0);
 
-		var headingsDiff = desiredHeading.horizontalAngleDeg() - this.heading.horizontalAngleDeg();
+		desiredHeading
+		.add(alignment)
+		.add(cohesion)
+		.add(separation)
+		.normalize();
+
+		var headingsDiff = angleBetweenVectors(this.heading, desiredHeading);
+		var crossProd = crossProduct(this.heading, desiredHeading);
 
 		if (Math.abs(headingsDiff) > BOID_MAX_ROT)
-			this.heading.rotateDeg(headingsDiff > 0 ? BOID_MAX_ROT : -BOID_MAX_ROT);
+			this.heading.rotateDeg(crossProd > 0 ? BOID_MAX_ROT : -BOID_MAX_ROT);
 		else
 			this.heading = desiredHeading;
 	}
 
-	this.shape.x = (this.shape.x + this.heading.x * BOID_SPEED).mod(canvas.width);
-	this.shape.y = (this.shape.y + this.heading.y * BOID_SPEED).mod(canvas.height);
+	this.updateSpeed();
+
+	this.shape.x = (this.shape.x + this.heading.x * this.speed).mod(canvas.width);
+	this.shape.y = (this.shape.y + this.heading.y * this.speed).mod(canvas.height);
 
 	this.shape.rotation = this.heading.horizontalAngleDeg();
 }
@@ -87,18 +97,19 @@ Boid.prototype.updateFriends = function() {
 	}
 }
 
+Boid.prototype.updateSpeed = function() {
+	this.speed = randomBetween(4, 10);
+}
+
 /*
 * Behaviors
 */
 
 Boid.prototype.calcAlignment = function() {
-	if (this.friends.length == 0)
-		return this.heading.clone();
+	var alignment = new Victor(0, 0);
 
-	var alignment = this.friends[0].heading.clone();
-
-	for (var i = 1; i < this.friends.length; i++)
-		alignment.add(this.friends[i].heading);
+	for (let friend of this.friends)
+		alignment.add(friend.heading)
 
 	return alignment.normalize();
 }
@@ -119,7 +130,7 @@ Boid.prototype.calcCohesion = function() {
 
 Boid.prototype.calcSeparation = function() {
 	if (this.closeFriends.length == 0)
-		return this.heading.clone();
+		return this.heading.clone().normalize();
 
 	var xMean = 0, yMean = 0;
 
