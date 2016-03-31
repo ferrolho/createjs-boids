@@ -9,7 +9,7 @@
 		spawnBoid(canvas.width / 2, canvas.height / 2);
 
 		addEventListener("click", function(event) {
-			spawnBoid(event.x, event.y);
+			spawnBoid(event.clientX, event.clientY);
 		});
 	}
 
@@ -80,3 +80,5 @@
 	}
 
 }
+
+console.log('Loaded: Scene.js');

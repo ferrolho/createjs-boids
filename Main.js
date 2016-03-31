@@ -4,14 +4,9 @@ var stage;
 function init() {
 	initCreateJS();
 
-	include(
-		'entities/Boid.js',
-		'Scene.js',
-		'Utilities.js',
-		
-		function() {
-			main();
-		});
+	include('Utilities.js', function() {
+		include('entities/Boid.js', 'Scene.js', function() { main(); });
+	});
 }
 
 function initCreateJS() {
@@ -44,3 +39,5 @@ function resize() {
 	canvas.width = window.innerWidth;
 	canvas.height = window.innerHeight;
 }
+
+console.log('Loaded: Main.js');

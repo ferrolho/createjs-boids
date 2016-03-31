@@ -57,3 +57,5 @@ Number.prototype.mod = function(n) {
 Number.prototype.clamp = function(min, max) {
 	return Math.min(Math.max(this, min), max);
 };
+
+console.log('Loaded: Utilities.js');

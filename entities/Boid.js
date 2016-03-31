@@ -144,3 +144,5 @@ Boid.prototype.calcSeparation = function() {
 
 	return new Victor(this.shape.x - xMean, this.shape.y - yMean).normalize();
 }
+
+console.log('Loaded: entities/Boid.js');
