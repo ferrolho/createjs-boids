@@ -16,8 +16,8 @@
 	Scene.prototype.update = function() {
 		updateStats();
 
-		for (let boid of boids)
-			boid.update();
+		for (i in boids)
+			boids[i].update();
 	}
 
 

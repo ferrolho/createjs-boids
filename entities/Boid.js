@@ -82,7 +82,9 @@ Boid.prototype.updateFriends = function() {
 	this.friends.length = 0;
 	this.closeFriends.length = 0;
 
-	for (let other of boids) {
+	for (i in boids) {
+		var other = boids[i];
+
 		if (this == other)
 			continue;
 
