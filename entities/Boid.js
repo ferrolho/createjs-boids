@@ -110,8 +110,11 @@ Boid.prototype.updateSpeed = function() {
 Boid.prototype.calcAlignment = function() {
 	var alignment = new Victor(0, 0);
 
-	for (let friend of this.friends)
+	for (i in this.friends) {
+		var friend = this.friends[i];
+
 		alignment.add(friend.heading)
+	}
 
 	return alignment.normalize();
 }
@@ -119,7 +122,9 @@ Boid.prototype.calcAlignment = function() {
 Boid.prototype.calcCohesion = function() {
 	var xMean = 0, yMean = 0;
 
-	for (let friend of this.friends) {
+	for (i in this.friends) {
+		var friend = this.friends[i];
+
 		xMean += friend.shape.x;
 		yMean += friend.shape.y;
 	}
