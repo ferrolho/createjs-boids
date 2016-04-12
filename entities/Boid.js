@@ -141,7 +141,9 @@ Boid.prototype.calcSeparation = function() {
 
 	var xMean = 0, yMean = 0;
 
-	for (let friend of this.closeFriends) {
+	for (i in this.closeFriends) {
+		var friend = this.friends[i];
+
 		xMean += friend.shape.x;
 		yMean += friend.shape.y;
 	}
